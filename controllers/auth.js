@@ -1,7 +1,24 @@
 // all these export will be exported as named exports 
+import { User } from '../models/User'
+export async function  register(req, res, next){
+    const {username,email,password} = req.body
 
-export function register(req, res, next){
-    res.send("Register Route")
+    try {
+        // create a user
+        const user = await User.create({
+            username,email,password
+        });
+        res.status(201).json({
+            success:true,
+            user:user
+        })
+    } catch (error) {
+        res.status(501).json({
+            success:true,
+            error:error.message
+        })
+        
+    }
 }
 
 export function login(req, res, next){
