@@ -17,4 +17,11 @@ app.use("/api/auth",authRoutes)
 const PORT = process.env.PORT || 8000
 
 
-app.listen(PORT , ()=>console.log(`server running on  port ${PORT}`))
+const server = app.listen(PORT , ()=>console.log(`server running on  port ${PORT}`))
+
+process.on("unhandledRejection",(error, promise)=>{
+    console.log(`Logged Error: ${error}`);
+
+    // graciously kill the server
+    server.close(()=>process.exit(1))
+})
