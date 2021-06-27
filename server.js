@@ -1,5 +1,11 @@
 import dotenv from 'dotenv'
 dotenv.config({path:"./config.env"})
+
+import connectDB from './config/db.js'
+// connect db
+connectDB()
+
+
 import express from 'express'
 import authRoutes from './routes/auth.js'
 
