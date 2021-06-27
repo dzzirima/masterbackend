@@ -13,3 +13,7 @@ const connectDB = async ()=>{
 
 
 export default connectDB;
+
+// note When you are failing to connect to db just add the following to your path 
+//C:\Program Files\MongoDB\Server\3.4\bin
+// THen after that ,create  C:\data\db
