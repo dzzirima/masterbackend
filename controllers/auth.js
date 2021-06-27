@@ -1,5 +1,5 @@
 // all these export will be exported as named exports 
-import { User } from '../models/User'
+import User  from '../models/User.js'
 export async function  register(req, res, next){
     const {username,email,password} = req.body
 
