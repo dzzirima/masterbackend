@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema({
 
 // working with middleware in mongoose
 UserSchema.pre("save", async function (next) {
+    // checks if we are not changing the password , avoid rehashing of the hashed password
     if(!this.isModified("password")){
         next()
     }
@@ -34,7 +35,9 @@ UserSchema.pre("save", async function (next) {
 
     
 })
-
+UserSchema.methods.matchPasswords = async function(password){
+    return await bcryptjs.compare(password,this.password);
+}
 
 const User = mongoose.model("User",UserSchema)
 
