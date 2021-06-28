@@ -23,16 +23,20 @@ const UserSchema = new mongoose.Schema({
 
 // working with middleware in mongoose
 UserSchema.pre("save", async function (next) {
-    if(!this.isModified("password")){
-        next()
-    }
-
-    // get the salt and encrpt the password
-    const salt = await bcryptjs.getSalt(10);
-    this.password = await bcryptjs.hash(this.password,salt)
+    console.log("hhh 222")
+    this.password = await bcryptjs.hash(this.password,4)
     next()
+    // if(!this.isModified("password")){
+    //     console.log("hah")
+    //     next();
+        
+    // }
 
-    
+    // // get the salt and encrpt the password
+    // const salt = bcryptjs.getSalt(4);
+    // this.password = await bcryptjs.hash(this.password,salt)
+    // console.log("haha 2")
+    // next();
 })
 
 
