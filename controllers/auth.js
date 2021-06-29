@@ -3,7 +3,7 @@ import ErrorResponce from '../helpers/errorResponse.js';
 import User  from '../models/User.js'
 export async function  register(req, res, next){
     const {username,email,password} = req.body
-    console.log(username,email,password)
+    
 
     try {
         // create a user
@@ -37,9 +37,10 @@ export async function login(req, res, next){
             return next(new ErrorResponce("Invalid credentials",401))
         }
  
-        // check if the user password matches and it has to be run on an instance of the user 
-        const isMatch = user.matchPasswords(password)
+        // check if the user password matches and it has to be run on an instance of the user  and add the await for it takes time
+        const isMatch = await user.matchPasswords(password) 
         // if the password dont match then 
+        console.log(isMatch);
         if(!isMatch){
             return next(new ErrorResponce("Invalid credentials",401))
         }
