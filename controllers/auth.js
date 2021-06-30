@@ -10,10 +10,7 @@ export async function  register(req, res, next){
         const user = await User.create({
             username,email,password
         });
-        res.status(201).json({
-            success:true,
-            user:user
-        })
+        sendToken(user,201,res)
     } catch (error) {
         // so when ever nodejs encounters an error it uses that middleware
         next(error)
@@ -40,19 +37,17 @@ export async function login(req, res, next){
         // check if the user password matches and it has to be run on an instance of the user  and add the await for it takes time
         const isMatch = await user.matchPasswords(password) 
         // if the password dont match then 
-        console.log(isMatch);
+       
         if(!isMatch){
             return next(new ErrorResponce("Invalid credentials",401))
         }
 
         // if all the test are passed then respond with a login token for the login of the user
-        res.status(200).json({
-            success:true,
-            token:"12233"
-        })
+        sendToken(user,201,res)
         
 
     } catch (error) {
+        console.log(error)
         res.status(200).json({
             success:false,
             error:error.message
@@ -67,4 +62,16 @@ export function forgotpassword(req, res, next){
 
 export function resetpassword(req, res, next){
     res.send("Reset passeord Route")
+}
+
+// function to handle the sending of the token
+const sendToken = (user,statusCode,res) =>{
+    
+    const token = user.getSignedToken();
+    console.log(token)
+    res.status(statusCode).json({
+        success:true,
+        token
+    })
+
 }
