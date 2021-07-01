@@ -8,6 +8,7 @@ connectDB()
 
 import express from 'express'
 import authRoutes from './routes/auth.js'
+import privateRoute from './routes/private.js'
 import errorHandler from './middleware/error.js'
 
 const app = express()
@@ -15,6 +16,7 @@ const app = express()
 app.use(express.json()) // this middleware allows us to get data from the body 
 
 app.use("/api/auth",authRoutes)
+app.use("/api/private",privateRoute)
 // error handler should be the last thing of the middleware
 app.use(errorHandler)
 
