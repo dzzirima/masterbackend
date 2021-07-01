@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import bcryptjs from 'bcryptjs'
 import jwt from "jsonwebtoken"
+import crypto from 'crypto'
 const UserSchema = new mongoose.Schema({
     username:{
         type:String,
@@ -19,7 +20,7 @@ const UserSchema = new mongoose.Schema({
         select:false
     },
     resetPasswordToken:String,
-    resetPasswordDate:Date
+    resetPasswordExpire:Date
 });
 
 // working with middleware in mongoose
@@ -44,6 +45,16 @@ UserSchema.methods.getSignedToken = function(){
         {id :this._id},
         process.env.JWT_SECRET,
         {expiresIn: process.env.JWT_EXPIRE})
+
+}
+// function to generate a reset token
+
+UserSchema.methods.generateResetToken = function(){
+    const resetToken = crypto.randomBytes(20).toString("hex")
+    this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex")
+    //  savin to to the database
+    this.resetPasswordExpire = Date.now() +10 * (60*1000)
+    return resetToken;
 
 }
 

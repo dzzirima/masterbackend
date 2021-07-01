@@ -56,8 +56,21 @@ export async function login(req, res, next){
     }
 }
 
-export function forgotpassword(req, res, next){
-    res.send("Forgot Password Route")
+export async function forgotpassword(req, res, next){
+    const { email } = req.body
+    
+    try {
+        const user = await User.findOne({email})
+        if(!user){
+            return next(new ErrorResponce("Email could not be sent",404))
+        }
+        const resetToken = user.getResetPasswordToken()
+        // save use to the database
+        await user.save();
+
+    } catch (error) {
+        
+    }
 }
 
 export function resetpassword(req, res, next){
