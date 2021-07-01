@@ -67,6 +67,20 @@ export async function forgotpassword(req, res, next){
         const resetToken = user.getResetPasswordToken()
         // save use to the database
         await user.save();
+        
+        const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`
+        const messsgae = `
+        <h1> You have requested a password reset </h1>
+        <p>Please go to the following url  to reset your password </p>
+        <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+
+        `// u ca use pug to do this
+        try {
+            
+        } catch (error) {
+            
+        }
+
 
     } catch (error) {
         
