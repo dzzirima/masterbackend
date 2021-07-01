@@ -20,7 +20,7 @@ const errorHandler   = (err,req,res,next)=>{
     }else if(error.name = "ValidationError"){
         //const message = Object.values(err.errors).map((val)=>val.message)
         //console.log(err)
-        error = new ErrorResponce("Please provide correct login Credentials1",400)
+        error = new ErrorResponce("Please provide correct login Credentials",400)
 
     }
     // now we need to get the status code we created from the above error
