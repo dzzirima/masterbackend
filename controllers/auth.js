@@ -2,6 +2,7 @@
 import ErrorResponce from '../helpers/errorResponse.js';
 import sendEmail from '../helpers/sendmail.js';
 import User  from '../models/User.js'
+import crypto from 'crypto'
 export async function  register(req, res, next){
     const {username,email,password} = req.body
     
@@ -109,8 +110,34 @@ export async function forgotpassword(req, res, next){
     }
 }
 
-export function resetpassword(req, res, next){
-    res.send("Reset passeord Route")
+export async function resetpassword(req, res, next){
+    
+    const resetPasswordToken = crypto.createHash("sha256").update(req.params.resetToken).digest("base64")
+    try {
+        const user = await User.findOne({
+            // same as time == time
+            resetPasswordToken,
+            resetPasswordToken:{ $gt : Date.now() }
+        })
+        if(!user){
+            return next(new ErrorResponce("Invalid Reset Token",400))
+        }
+
+        user.password = req.body.password;
+        user.resetPasswordExpire = undefined;
+        user.resetPasswordToken = undefined;
+
+        // when saving it gonna pic up that the password  was reseted and run the reshashing of password ...clever
+        await user.save()
+        res.status(201).json({
+            success:true,
+            data:"Password Reset  Success"
+        })
+    } catch (error) {
+        next(error)
+        
+    }
+
 }
 
 // function to handle the sending of the token
