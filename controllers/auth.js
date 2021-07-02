@@ -1,5 +1,6 @@
 // all these export will be exported as named exports 
 import ErrorResponce from '../helpers/errorResponse.js';
+import sendEmail from '../helpers/sendmail.js';
 import User  from '../models/User.js'
 export async function  register(req, res, next){
     const {username,email,password} = req.body
@@ -62,15 +63,17 @@ export async function forgotpassword(req, res, next){
     
     try {
         const user = await User.findOne({email})
+        
         if(!user){
             return next(new ErrorResponce("Email could not be sent",404))
         }
-        const resetToken = user.getResetPasswordToken()
+        const resetToken = user.getResetPasswordToken();
+        
         // save use to the database
         await user.save();
         
         const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`
-        const messgae = `
+        const message = `
         <h1> You have requested a password reset </h1>
         <p>Please go to the following url  to reset your password </p>
         <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
@@ -81,13 +84,14 @@ export async function forgotpassword(req, res, next){
                 to:user.email,
                 subject:"Password Reset Request",
                 text:message
-            })
+            });
             res.status(200).json({
                 success:true,
                 data:"Email sent"
             })
             
         } catch (error) {
+            console.log(error)
             /// clear all the reset token before you save to the database
             user.getResetPasswordToken = undefined;
             user.resetPasswordExpire = undefined;
