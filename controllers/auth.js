@@ -58,6 +58,7 @@ export async function login(req, res, next){
 
 export async function forgotpassword(req, res, next){
     const { email } = req.body
+    console.log(email)
     
     try {
         const user = await User.findOne({email})
@@ -69,20 +70,37 @@ export async function forgotpassword(req, res, next){
         await user.save();
         
         const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`
-        const messsgae = `
+        const messgae = `
         <h1> You have requested a password reset </h1>
         <p>Please go to the following url  to reset your password </p>
         <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
 
         `// u ca use pug to do this
         try {
+            await sendEmail({
+                to:user.email,
+                subject:"Password Reset Request",
+                text:message
+            })
+            res.status(200).json({
+                success:true,
+                data:"Email sent"
+            })
             
         } catch (error) {
+            /// clear all the reset token before you save to the database
+            user.getResetPasswordToken = undefined;
+            user.resetPasswordExpire = undefined;
+            
+            await user.save()
+            return next(new ErrorResponce("Email could not be send",500))
             
         }
 
 
     } catch (error) {
+        console.log(error)
+        next(error)
         
     }
 }
