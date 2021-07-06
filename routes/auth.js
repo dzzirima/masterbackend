@@ -12,4 +12,5 @@ router.route("/forgotpassword").post(forgotpassword)
 router.route("/resetpassword/:resetToken").put(resetpassword)
 
 
+
 export default router

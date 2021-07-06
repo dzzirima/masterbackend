@@ -6,6 +6,7 @@ const NoteSchema = new mongoose.Schema({
     noteKeyboard:String,
     noteSummary:String,
     noteBody:String,
+    noteDate:Date
     
 })
 
